@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KLI — Sovereign Vessel Engine (Offline)</title>
+    <title>KLI // PURGA — Sovereign Rumination Engine</title>
     <script src="https://cdn.jsdelivr.net/npm/react@18/umd/react.production.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@babel/standalone/babel.min.js"></script>
@@ -15,6 +15,9 @@
             background-color: #080808;
             color: #e5e5e5;
         }
+        textarea {
+            caret-color: #e5e5e5;
+        }
         .scrollbar-none::-webkit-scrollbar { display: none; }
         .scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
@@ -25,199 +28,84 @@
 
     <script type="text/babel">
         function App() {
-            const [view, setView] = React.useState('home'); // home, scan, burn, dump
+            const [view, setView] = React.useState('home'); // home, dump, fact, burn
             
-            // State for Module A: Signal Scan
-            const [dilemma, setDilemma] = React.useState('');
-            const [activeElement, setActiveElement] = React.useState(null); // fire, water, air, earth
-            const [scanResult, setScanResult] = React.useState(null);
-
-            // State for Module B: Somatic Burnout (Sustain)
-            const [burnTimer, setBurnTimer] = React.useState(120); // 2 minutes
-            const [isBurning, setIsBurning] = React.useState(false);
-
-            // State for Module C: Blind Dump
+            // Module 1: Blind Dump State
             const [dumpText, setDumpText] = React.useState('');
             const [isDestroyed, setIsDestroyed] = React.useState(false);
 
-            // Run Burnout Timer
+            // Module 2: Fact Test State
+            const [factInput, setFactInput] = React.useState('');
+            const [factSubmitted, setFactSubmitted] = React.useState(false);
+
+            // Module 3: Somatic Burn Timer State
+            const [timer, setTimer] = React.useState(120);
+            const [isRunning, setIsRunning] = React.useState(false);
+
             React.useEffect(() => {
                 let interval;
-                if (isBurning && burnTimer > 0) {
-                    interval = setInterval(() => setBurnTimer(t => t - 1), 1000);
-                } else if (burnTimer === 0) {
-                    setIsBurning(false);
+                if (isRunning && timer > 0) {
+                    interval = setInterval(() => setTimer(t => t - 1), 1000);
+                } else if (timer === 0) {
+                    setIsRunning(false);
                 }
                 return () => clearInterval(interval);
-            }, [isBurning, burnTimer]);
-
-            const analyzeDilemma = (el) => {
-                setActiveElement(el);
-                const analyses = {
-                    fire: {
-                        ego: "Urgencia reactiva, orgullo herido o prisa por demostrar control. El ego grita para no sentirse impotente.",
-                        soul: "Certeza fulminante, fría y limpia. Una voluntad alineada que no necesita justificación ni drama."
-                    },
-                    water: {
-                        ego: "Desborde emocional, apego, miedo al abandono o nostalgia que se disfraza de intuición.",
-                        soul: "Paz profunda o repulsión sutil e inquebrantable en el cuerpo. El agua fluye sin forzar."
-                    },
-                    air: {
-                        ego: "Rumiación obsesiva, bucle mental y coartadas intelectuales para justificar lo que deseas creer.",
-                        soul: "Revelación repentina, comprensión clara de la estructura sin esfuerzo mental."
-                    },
-                    earth: {
-                        ego: "Rigidez defensiva, resistencia enfermiza al cambio por miedo a perder seguridad o control.",
-                        soul: "Gravedad, arraigo y solidez real en los huesos. Un cimiento que no se tambalea."
-                    }
-                };
-                setScanResult(analyses[el]);
-            };
+            }, [isRunning, timer]);
 
             return (
                 <div className="max-w-xl mx-auto px-6 py-12 flex flex-col min-h-screen justify-between">
                     {/* Header */}
                     <header className="border-b border-neutral-800 pb-6 flex justify-between items-center">
                         <div>
-                            <h1 className="text-xl font-bold tracking-widest text-neutral-100">KLI // VASIJA</h1>
-                            <p className="text-xs text-neutral-500 tracking-wider mt-1">Sovereign Engine [100% Local / Sin API]</p>
+                            <h1 className="text-xl font-bold tracking-widest text-neutral-100">KLI // PURGA</h1>
+                            <p className="text-xs text-neutral-500 tracking-wider mt-1">Sovereign Rumination Engine [App 01]</p>
                         </div>
                         <button 
-                            onClick={() => { setView('home'); setScanResult(null); setActiveElement(null); }}
+                            onClick={() => { setView('home'); setIsDestroyed(false); setFactSubmitted(false); setIsRunning(false); setTimer(120); }}
                             className="text-xs tracking-widest uppercase border border-neutral-800 px-3 py-1.5 hover:border-neutral-600 transition-colors text-neutral-400"
                         >
                             Centro
                         </button>
                     </header>
 
-                    {/* Main Content Area */}
+                    {/* Main Content */}
                     <main className="my-auto py-8">
                         {view === 'home' && (
                             <div className="space-y-8 animate-fadeIn">
                                 <div className="space-y-3">
-                                    <h2 className="text-lg font-medium text-neutral-200">Silencio Operativo Absoluto.</h2>
+                                    <h2 className="text-lg font-medium text-neutral-200">Corte de Bucle y Descarga Forzosa.</h2>
                                     <p className="text-sm text-neutral-400 leading-relaxed">
-                                        Funcionamiento 100% local en tu navegador. Sin llamadas a servidores externos, sin claves API ni dependencias. Un espejo frío de alta densidad para separar el grito del ego de la señal pura.
+                                        Herramienta de primeros auxilios mentales. Cuando la rumiación colapsa el sistema, no necesitas reflexionar; necesitas vaciar el ruido, anclarte al hecho real y quemar la estática.
                                     </p>
                                 </div>
 
                                 <div className="grid grid-cols-1 gap-4 pt-4">
                                     <button 
-                                        onClick={() => setView('scan')}
-                                        className="text-left border border-neutral-800 p-5 hover:border-neutral-500 transition-all group bg-neutral-950"
-                                    >
-                                        <div className="text-xs text-neutral-500 tracking-wider mb-1">MÓDULO 01</div>
-                                        <div className="text-sm font-medium text-neutral-200 group-hover:text-white">Escáner de Señal (Ego vs. Alma)</div>
-                                        <div className="text-xs text-neutral-500 mt-2">Filtra tu impulso a través de los cuatro elementos.</div>
-                                    </button>
-
-                                    <button 
-                                        onClick={() => { setBurnTimer(120); setIsBurning(false); setView('burn'); }}
-                                        className="text-left border border-neutral-800 p-5 hover:border-neutral-500 transition-all group bg-neutral-950"
-                                    >
-                                        <div className="text-xs text-neutral-500 tracking-wider mb-1">MÓDULO 02</div>
-                                        <div className="text-sm font-medium text-neutral-200 group-hover:text-white">Combustión Emocional (Sostener)</div>
-                                        <div className="text-xs text-neutral-500 mt-2">Protocolo de expansión y colapso de la carga estática.</div>
-                                    </button>
-
-                                    <button 
                                         onClick={() => { setDumpText(''); setIsDestroyed(false); setView('dump'); }}
                                         className="text-left border border-neutral-800 p-5 hover:border-neutral-500 transition-all group bg-neutral-950"
                                     >
-                                        <div className="text-xs text-neutral-500 tracking-wider mb-1">MÓDULO 03</div>
-                                        <div className="text-sm font-medium text-neutral-200 group-hover:text-white">Descarga Forzosa (Corte de Bucle)</div>
-                                        <div className="text-xs text-neutral-500 mt-2">Escritura ciega y destrucción absoluta de la rumiación.</div>
+                                        <div className="text-xs text-neutral-500 tracking-wider mb-1">PROTOCOLO 01</div>
+                                        <div className="text-sm font-medium text-neutral-200 group-hover:text-white">Escritura Ciega (Vaciado Absoluto)</div>
+                                        <div className="text-xs text-neutral-500 mt-2">Vuelca el bucle mental sin filtros y destruye el rastro.</div>
                                     </button>
-                                </div>
-                            </div>
-                        )}
 
-                        {view === 'scan' && (
-                            <div className="space-y-6">
-                                <div>
-                                    <span className="text-xs text-neutral-500 tracking-widest uppercase">Módulo 01 // Diagnóstico</span>
-                                    <h3 className="text-base font-medium text-neutral-200 mt-1">¿Qué impulso, duda o conflicto intentas decodificar?</h3>
-                                </div>
+                                    <button 
+                                        onClick={() => { setFactInput(''); setFactSubmitted(false); setView('fact'); }}
+                                        className="text-left border border-neutral-800 p-5 hover:border-neutral-500 transition-all group bg-neutral-950"
+                                    >
+                                        <div className="text-xs text-neutral-500 tracking-wider mb-1">PROTOCOLO 02</div>
+                                        <div className="text-sm font-medium text-neutral-200 group-hover:text-white">El Test del Hecho Puro</div>
+                                        <div className="text-xs text-neutral-500 mt-2">Corta la especulación abstracta reduciéndola a la materia real.</div>
+                                    </button>
 
-                                <textarea 
-                                    rows="3"
-                                    value={dilemma}
-                                    onChange={(e) => setDilemma(e.target.value)}
-                                    placeholder="Escribe el hecho o la fricción sin justificaciones..."
-                                    className="w-full bg-neutral-950 border border-neutral-800 p-4 text-sm text-neutral-200 focus:outline-none focus:border-neutral-600 resize-none"
-                                />
-
-                                <div className="space-y-3">
-                                    <p className="text-xs text-neutral-400 tracking-wider uppercase">Selecciona el canal elemental predominante:</p>
-                                    <div className="grid grid-cols-2 gap-3">
-                                        {[
-                                            { id: 'fire', label: 'Fuego', desc: 'Urgencia / Chispa' },
-                                            { id: 'water', label: 'Agua', desc: 'Emoción / Sintonía' },
-                                            { id: 'air', label: 'Aire', desc: 'Mental / Bucle' },
-                                            { id: 'earth', label: 'Tierra', desc: 'Somático / Inercia' }
-                                        ].map(el => (
-                                            <button
-                                                key={el.id}
-                                                onClick={() => analyzeDilemma(el.id)}
-                                                className={`p-3 text-left border transition-all ${activeElement === el.id ? 'border-neutral-200 bg-neutral-900' : 'border-neutral-800 bg-neutral-950 hover:border-neutral-700'}`}
-                                            >
-                                                <div className="text-xs font-medium text-neutral-200">{el.label}</div>
-                                                <div className="text-[10px] text-neutral-500 mt-0.5">{el.desc}</div>
-                                            </button>
-                                        ))}
-                                    </div>
-                                </div>
-
-                                {scanResult && (
-                                    <div className="border border-neutral-800 bg-neutral-950 p-5 space-y-4 mt-6 animate-fadeIn">
-                                        <div>
-                                            <span className="text-[10px] uppercase tracking-widest text-neutral-500">El Grito del Ego</span>
-                                            <p className="text-xs text-neutral-300 mt-1 leading-relaxed">{scanResult.ego}</p>
-                                        </div>
-                                        <div className="border-t border-neutral-900 pt-3">
-                                            <span className="text-[10px] uppercase tracking-widest text-neutral-400 font-semibold">El Susurro del Alma</span>
-                                            <p className="text-xs text-neutral-200 mt-1 leading-relaxed font-medium">{scanResult.soul}</p>
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                        )}
-
-                        {view === 'burn' && (
-                            <div className="space-y-6 text-center py-6">
-                                <div>
-                                    <span className="text-xs text-neutral-500 tracking-widest uppercase">Módulo 02 // Combustión</span>
-                                    <h3 className="text-base font-medium text-neutral-200 mt-1">Sostén la incomodidad sin huir</h3>
-                                    <p className="text-xs text-neutral-400 mt-2 max-w-xs mx-auto">
-                                        Hazla grande, grande, grande en tu cuerpo. No la resuelvas mentalmente. Deja que consuma su propia inercia.
-                                    </p>
-                                </div>
-
-                                <div className="py-10">
-                                    <div className="text-4xl font-light tracking-widest text-neutral-200">
-                                        {Math.floor(burnTimer / 60)}:{String(burnTimer % 60).padStart(2, '0')}
-                                    </div>
-                                    <div className="text-[10px] text-neutral-500 uppercase tracking-widest mt-2">
-                                        {isBurning ? 'Sosteniendo el fuego...' : 'Pausa de Combustión'}
-                                    </div>
-                                </div>
-
-                                <div className="flex justify-center gap-4">
-                                    {!isBurning ? (
-                                        <button 
-                                            onClick={() => setIsBurning(true)}
-                                            className="border border-neutral-700 bg-neutral-900 text-neutral-200 px-6 py-2.5 text-xs tracking-widest uppercase hover:bg-neutral-800 transition-colors"
-                                        >
-                                            Iniciar Sostén
-                                        </button>
-                                    ) : (
-                                        <button 
-                                            onClick={() => setIsBurning(false)}
-                                            className="border border-neutral-800 bg-neutral-950 text-neutral-400 px-6 py-2.5 text-xs tracking-widest uppercase hover:border-neutral-600 transition-colors"
-                                        >
-                                            Detener
-                                        </button>
-                                    )}
+                                    <button 
+                                        onClick={() => { setTimer(120); setIsRunning(false); setView('burn'); }}
+                                        className="text-left border border-neutral-800 p-5 hover:border-neutral-500 transition-all group bg-neutral-950"
+                                    >
+                                        <div className="text-xs text-neutral-500 tracking-wider mb-1">PROTOCOLO 03</div>
+                                        <div className="text-sm font-medium text-neutral-200 group-hover:text-white">Sostener la Carga (Combustión)</div>
+                                        <div className="text-xs text-neutral-500 mt-2">Expandir conscientemente la incomodidad hasta su colapso.</div>
+                                    </button>
                                 </div>
                             </div>
                         )}
@@ -225,18 +113,18 @@
                         {view === 'dump' && (
                             <div className="space-y-6">
                                 <div>
-                                    <span className="text-xs text-neutral-500 tracking-widest uppercase">Módulo 03 // Descarga Forzosa</span>
-                                    <h3 className="text-base font-medium text-neutral-200 mt-1">Vuelca todo el ruido mental</h3>
-                                    <p className="text-xs text-neutral-400 mt-1">Escribe sin filtros hasta agotar el bucle. Al terminar, destruye el rastro.</p>
+                                    <span className="text-xs text-neutral-500 tracking-widest uppercase">Protocolo 01 // Escritura Ciega</span>
+                                    <h3 className="text-base font-medium text-neutral-200 mt-1">Saca todo el ruido de la cabeza</h3>
+                                    <p className="text-xs text-neutral-400 mt-1">Escribe rápido, sin cuidar la forma ni la moral. Al pulsar quemar, se borra para siempre de la memoria.</p>
                                 </div>
 
                                 {!isDestroyed ? (
                                     <div className="space-y-4">
                                         <textarea 
-                                            rows="8"
+                                            rows="9"
                                             value={dumpText}
                                             onChange={(e) => setDumpText(e.target.value)}
-                                            placeholder="Escribe el bucle sin parar..."
+                                            placeholder="Escribe el bucle mental sin parar..."
                                             className="w-full bg-neutral-950 border border-neutral-800 p-4 text-xs text-neutral-200 focus:outline-none focus:border-neutral-600 resize-none font-mono"
                                         />
                                         <button 
@@ -248,9 +136,9 @@
                                         </button>
                                     </div>
                                 ) : (
-                                    <div className="border border-neutral-800 bg-neutral-950 p-8 text-center space-y-4">
+                                    <div className="border border-neutral-800 bg-neutral-950 p-8 text-center space-y-4 animate-fadeIn">
                                         <div className="text-xs uppercase tracking-widest text-neutral-400">Vasija Limpia</div>
-                                        <p className="text-xs text-neutral-500">El ruido ha sido purgado de la memoria local.</p>
+                                        <p className="text-xs text-neutral-500">El texto ha sido incinerado digitalmente. No queda rastro.</p>
                                         <button 
                                             onClick={() => setIsDestroyed(false)}
                                             className="border border-neutral-800 text-neutral-300 px-4 py-2 text-xs uppercase tracking-widest hover:border-neutral-600 transition-colors"
@@ -261,11 +149,93 @@
                                 )}
                             </div>
                         )}
+
+                        {view === 'fact' && (
+                            <div className="space-y-6">
+                                <div>
+                                    <span className="text-xs text-neutral-500 tracking-widest uppercase">Protocolo 02 // El Hecho Puro</span>
+                                    <h3 className="text-base font-medium text-neutral-200 mt-1">Separa el drama de la realidad física</h3>
+                                    <p className="text-xs text-neutral-400 mt-1">¿Cuál es el único dato matemático y físico indiscutible que está ocurriendo ahora mismo?</p>
+                                </div>
+
+                                {!factSubmitted ? (
+                                    <div className="space-y-4">
+                                        <textarea 
+                                            rows="4"
+                                            value={factInput}
+                                            onChange={(e) => setFactInput(e.target.value)}
+                                            placeholder="Ej: Estoy sentado, mis manos están quietas, no hay ninguna amenaza real presente..."
+                                            className="w-full bg-neutral-950 border border-neutral-800 p-4 text-xs text-neutral-200 focus:outline-none focus:border-neutral-600 resize-none"
+                                        />
+                                        <button 
+                                            onClick={() => setFactSubmitted(true)}
+                                            disabled={!factInput.trim()}
+                                            className="w-full border border-neutral-700 bg-neutral-900 text-neutral-200 py-3 text-xs tracking-widest uppercase hover:bg-neutral-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                        >
+                                            Validar Hecho Físico
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <div className="border border-neutral-800 bg-neutral-950 p-6 space-y-4 animate-fadeIn">
+                                        <div className="text-[10px] uppercase tracking-widest text-neutral-500">Conclusión de Materia</div>
+                                        <p className="text-xs text-neutral-200 leading-relaxed italic">"{factInput}"</p>
+                                        <p className="text-xs text-neutral-400 pt-2 border-t border-neutral-900">
+                                            Todo lo demás es estática mental, especulación del ego y películas del pasado. El resto no existe en la materia.
+                                        </p>
+                                        <button 
+                                            onClick={() => { setFactInput(''); setFactSubmitted(false); }}
+                                            className="w-full border border-neutral-800 text-neutral-300 py-2.5 text-xs uppercase tracking-widest hover:border-neutral-600 transition-colors mt-4"
+                                        >
+                                            Reiniciar Test
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
+                        {view === 'burn' && (
+                            <div className="space-y-6 text-center py-6">
+                                <div>
+                                    <span className="text-xs text-neutral-500 tracking-widest uppercase">Protocolo 03 // Sostener la Carga</span>
+                                    <h3 className="text-base font-medium text-neutral-200 mt-1">Expansión hasta el colapso</h3>
+                                    <p className="text-xs text-neutral-400 mt-2 max-w-xs mx-auto">
+                                        Lleva la atención al nudo físico. Hazlo grande, grande, grande. No huyas ni lo distraigas. Deja que se consuma solo.
+                                    </p>
+                                </div>
+
+                                <div className="py-10">
+                                    <div className="text-4xl font-light tracking-widest text-neutral-200">
+                                        {Math.floor(timer / 60)}:{String(timer % 60).padStart(2, '0')}
+                                    </div>
+                                    <div className="text-[10px] text-neutral-500 uppercase tracking-widest mt-2">
+                                        {isRunning ? 'Sosteniendo la densidad...' : 'Pausa Operativa'}
+                                    </div>
+                                </div>
+
+                                <div className="flex justify-center gap-4">
+                                    {!isRunning ? (
+                                        <button 
+                                            onClick={() => setIsRunning(true)}
+                                            className="border border-neutral-700 bg-neutral-900 text-neutral-200 px-6 py-2.5 text-xs tracking-widest uppercase hover:bg-neutral-800 transition-colors"
+                                        >
+                                            Iniciar Sostén
+                                        </button>
+                                    ) : (
+                                        <button 
+                                            onClick={() => setIsRunning(false)}
+                                            className="border border-neutral-800 bg-neutral-950 text-neutral-400 px-6 py-2.5 text-xs tracking-widest uppercase hover:border-neutral-600 transition-colors"
+                                        >
+                                            Pausar
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+                        )}
                     </main>
 
                     {/* Footer */}
                     <footer className="border-t border-neutral-900 pt-6 text-center text-[10px] text-neutral-600 tracking-widest uppercase">
-                        KLI // Cero Adornos. Cero Dependencia. Sin API.
+                        KLI // PURGA — Cero Adornos. Cero Memoria.
                     </footer>
                 </div>
             );
